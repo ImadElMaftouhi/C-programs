@@ -1,0 +1,112 @@
+Voir shema ici:
+http://graphonline.ru/en/?graph=YzFnRvcfwTXBsPbt
+
+on note que:
+        AB+ : 1
+        AB- : 2
+        A+  : 3
+        A-  : 4
+        B+  : 5
+        B-  : 6
+        O+  : 7
+        O-  : 8
+
+Definition mathematique de graphe:
+    On représente ce graphe comme G=(X,Y) 
+        tel que 
+            X = {1,2,3,4,5,6,7,8} l'ensemble des sommets
+        et:
+            Y = {1-1;1-2;....} l'ensemble des relations/arétes dans le graphe G reliant chaque sommet x et y de X.
+        
+        card(X) = |X|  =  8
+        card(Y) = |Y|  =  31
+
+        degrée de graphe: d(G) = 2*card(Y) = 62
+
+        Graphe simple ? -> Non, car il contient des boucles
+        Graphe complet ? Graphe connexe ? Fortement connexe ? Planaire ?
+        On admet que le graphe est orienté acyclique, c-a-d il n'existe pas des circuit dans de graphe. Comment démonter cette result ? 
+
+3) Demi degrée de chaque graphe:
+
+        |   AB+  |   AB-  |   A+   |   A-   |   B+   |   B-   |   O+   |   O-   |
+---------------------------------------------------------------------------------
+d+(x)   |   1    |   2    |   3    |   4    |   3    |   4    |   7    |   8    |
+---------------------------------------------------------------------------------
+d-(x)   |   7    |   6    |   4    |   3    |   4    |   3    |   2    |   1    |
+---------------------------------------------------------------------------------
+
+4) Ensemble des successeurs de chaque sommets:
+
+
+        |AB+  =  1  | AB-  =  2	| A+   =   3 | A-   =    4  |	B+   =   5 | B-   =   6   | O+   =   7     | O-   =   8 |
+------------------------------------------------------------------------------------------------------------------------|
+Succ(x)	|   AB+     |	AB+; AB-|  AB+ ; AB- |   A+ ; AB+   |  AB+ ; AB-   |  AB+ ; AB-   | O+; B- ; B+    |O+ ; O-; B-;|
+        |           |           |      ;A+   |      ;A+     |      B+      |  B- ; B+     | A- ; A+ ; AB+  |B+ ; A- ;A+ |
+        |           |           |            |              |              |              |     AB-        |  AB+ ; AB- |             
+------------------------------------------------------------------------------------------------------------------------|
+Pred(x)	| O+ ; O-;  |AB- ; O- ; | O+ ; O-    |O+ ; A- ; A-  |O+ ; O- ;     | B- ; O+ ; O- |    O+ ; O-   |      O-      |
+        |B-; B+ ; A-|B+ ; A- ;  | ; A- ; A+  |              |B- ; B+       |              |              |              |
+        | ; A+ ;AB+ |O+ ; B- ;  |            |              |              |              |              |              |
+        |; AB-      |  A+ ;	|	     |	            |              |              |              |              |   	
+------------------------------------------------------------------------------------------------------------------------|
+
+Partie 2: 
+        1. Voir code associée dans le repertoire;
+        2. Il sagit de deux fonctions: une fonction pour calculer le nombre des successeurs , et une autre pour calculer le nombre des predecesseurs
+        3. Voir les fonction show_succ() et show_pred()
+
+Voici la matrice d'adjacence:
+        AB+     AB-     A+      A-      B+      B-      O+      O-
+AB+     1       0       0       0       0       0       0       0
+AB-     1       1       0       0       0       0       0       0
+A+      1       1       1       0       0       0       0       0
+A-      1       1       1       1       0       0       0       0
+B+      1       1       0       0       1       0       0       0
+B-      1       1       0       0       1       1       0       0
+O+      1       1       1       1       1       1       1       0
+O-      1       1       1       1       1       1       1       1
+
+
+
+l'inconvenience de cette representation c'est l'allocation de la mémoire pour les 0 qui ni represente aucun information qui n'est pas deja calculable
+la solution c'est d'utiliser les listes des successeurs.
+
+Representation avec les listes des sucesseurs:
+        PS[1] = 1
+        PS[n+1] = m+1 
+        n = card(X) = 8
+        m = card(Y) = 32 arétes
+        PS[i+1] = PS[i] + card( succ(x_i ) )
+
+        PS = [1 ; 2 ; 4 ; 7 ; 11 ; 14 ; 18 ; 25 ; 33]  : Listes des pointers sur le premier successeurs
+
+        LS est un tableau qui contient tous les sommet qui sont des somment final d'un arete en ordre. Contient m element
+
+        LS [ 1 ; 1 ; 2 ; 1 ; 2 ; 3 ; 1 ; 2 ; 3 ; 4 ; 1; 2 ; 3 ; 4 ; 1 ; 2 ; 5; 1 ; 2 ; 5 ; 6 ; 1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 1 ; 2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 8]
+
+        Exemple: 
+                Quel sont les types sanguins qui peuvent recevoir depuis le Groupe Sanguin O- ?
+                -> On cherche les successeurs de sommet 8 qui represente O-.
+                les successeurs de ce somment se trouve entre la case PS[i] et PS[i+1]-1 dans le tableau LS
+                on: 
+                        PS[8] = 25    ;    PS[9] - 1 = 33 - 1 = 32
+                donc:
+                        25  <= liste(succ(8)) <=  32
+
+                Les groupe sanguine compatible avec O- sont donc: 1 ; 
+                        2 ; 3 ; 4 ; 5 ; 6 ; 7 ; 8       ou bien:        AB+ ; AB- ; A+ ; A- ; B+ ; B- ; O+ ; O-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
