@@ -609,6 +609,24 @@ void freeMemory_file(file** head){
 	}
 }
 
+
+
+// GRAPHE IMPLEMANTATION /////////
+
+
+
+float** ImportMatrice(char *path){
+	if ( path == NULL ){
+		printf("Le chemin n'est pas specifiée a l'appelle de la fonction ImportMatrice()!");
+		return NULL;
+	}
+
+	// add logic to import data here.	
+
+}
+
+
+
 ////////////////////////////////////////////////////////  M A I N  ////////////////////////////////////////////////////////
 int main(){
 	int n; // la variable oú on va stocker la valeur a chercher dans n'importe quelle liste.
